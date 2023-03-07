@@ -1,0 +1,7 @@
+{
+  "name": "ion-tut-chat01",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
