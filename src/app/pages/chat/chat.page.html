@@ -1,0 +1,104 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="'/chat'">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button (click)="isScrolledDisabled()">
+        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>{{chatName | async}} </ion-title>
+  </ion-toolbar>  
+</ion-header>
+
+<ion-content
+id="msgcon"
+#msgcontent
+class="ion-padding"
+[scrollEvents]="true"
+(ionScrollEnd)="onScrollEnd()"
+(ionScrollStart)="onScrollStart()"
+> <!-- 
+(ionScroll)="onScroll()"
+
+  (ionScrollStart)="handleScrollStart()"
+  (ionScrollEnd)="handleScrollEnd()"
+  (ionScroll)="handleScroll($any($event))"
+  
+  (scroll)="print($event)" -->
+  
+  <!-- Overstående er for scroll. Taget fra Ionic, ion-content api -->
+
+
+
+  <ion-grid>
+    <ng-container *ngIf="(messages$ | async); else loading; let msgs">
+      <ng-container #msgBoard *ngIf="msgs.length > 0 ; else noMsgs">
+
+        <ion-row *ngFor="let message of msgs">
+          <ion-col size="2" offset="5" class="time">{{ message.createdAt['seconds']*1000 | date: "dd. MMM" }}</ion-col>
+          <ion-col size="9" class="message" [offset]="message.myMsg ? 3 : 0" [ngClass]="{ 'my-message': message.myMsg, 'other-message': !message.myMsg }">
+            <b>{{ message.fromName }}</b>
+            <div class="time ion-text-right">{{ message.createdAt['seconds']*1000 | date: "HH:mm" }}</div>
+            <span>
+              <br>{{ message.msg }}
+            </span>
+          </ion-col>
+        </ion-row>
+
+      </ng-container>
+    </ng-container>
+  </ion-grid>
+
+  <ng-template #noMsgs>
+    <ion-row>
+      <ion-col size="6" class="message" [offset]="3" [ngClass]="'other-message'">
+        <b>Say hello</b>
+        <br>
+        <span> Say hi to your new best friend! </span>
+        <br>
+        <br>
+      </ion-col>
+    </ion-row>
+  </ng-template>
+
+  <ng-template #loading>
+    <!-- <ion-grid> -->
+    <ion-row>
+      <ion-col size="6" class="message" [offset]="3" [ngClass]="'my-message'">
+        <b>LOADING</b>
+        <br>
+        <span> Please wait a second! </span>
+        <br>
+        <br>
+      </ion-col>
+    </ion-row>
+    <!-- </ion-grid> -->
+  </ng-template>
+
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar color="light">
+    <ion-row class="ion-align-items-center">
+      <ion-col size="10">
+        <ion-textarea autoGrow="true" class="message-input" rows="1" maxLength="500" [(ngModel)]="newMsg">
+        </ion-textarea>
+      </ion-col>
+      <ion-col size="2">
+        <ion-button expand="block" fill="clear" color="primary" [disabled]="newMsg === ''" class="msg-btn" (click)="sendMessage()">
+          <!--  -->
+          <ion-icon name="send" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

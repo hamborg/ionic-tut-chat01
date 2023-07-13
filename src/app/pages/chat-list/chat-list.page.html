@@ -1,0 +1,89 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="'messages/chat0'">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button (click)="showHideAll()">
+        <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>(NAMES) samtaler</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="false">
+
+  <ion-list [inset]="true" lines="full" class="chatlist">
+    <ng-container *ngIf="(chats$ | async); else wait4it; let chats">
+      <ng-container *ngIf="chats.length > 0; else noMsgs">
+        <ion-item button detail="true" *ngFor="let chat of chats" [routerLink]="'messages/'+chat.cid" [ngClass]="{ 'new-chat': chat.unread, 'normal-chat': !chat.unread }">
+          <!-- <ion-item button detail="true"> -->
+          <ion-avatar slot="start">
+            <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+          </ion-avatar>
+          <!-- <ion-badge slot="end" color="success">22</ion-badge> -->
+          <ion-badge *ngIf="chat.unread" slot="end" color="primary">{{chat.myNews}}</ion-badge>
+          <ion-label>
+            <h3>{{chat.chatName}}</h3>
+            <p>{{chat.lastMsg.msg}}</p>
+          </ion-label>
+        </ion-item>
+      </ng-container>
+    </ng-container>
+
+    <ng-template #wait4it>
+      <ion-item button detail="true">
+        <ion-avatar slot="start">
+          <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+        </ion-avatar>
+        <!-- <ion-badge slot="end" color="danger">??</ion-badge> -->
+        <ion-label>
+          <h3>Loading Name...</h3>
+          <p>Loading chat message... wait4it...</p>
+        </ion-label>
+      </ion-item>
+    </ng-template>
+
+    <ng-template #noMsgs>
+      <ion-item detail="false">
+        <!-- <ion-avatar slot="start">
+        </ion-avatar> -->
+        <!-- <ion-badge slot="end" color="danger">??</ion-badge> -->
+        <ion-label class="labelcenter">
+          <h1>No messages...</h1>
+          <h3>Go get a fetch... :)</h3>
+        </ion-label>
+      </ion-item>
+      <div class="center">
+        <img (click)="showHideAll()" src="..\..\..\assets\imgs\fetchlogo_demo.png" />
+      </div>
+    </ng-template>
+
+  </ion-list>
+</ion-content>
+
+
+<ion-footer>
+  <ion-toolbar color="light">
+    <ion-row class="ion-align-items-center">
+      <ion-col size="3">
+        <ion-button expand="block" fill="clear" color="primary" class="msg-btn" (click)="newChat()">
+          <ion-icon name="add-circle-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+
+      </ion-col>
+      <ion-col size="3">
+        <ion-button expand="block" fill="clear" color="primary" class="msg-btn" (click)="showHideAll()">
+          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

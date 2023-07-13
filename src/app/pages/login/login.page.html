@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <form [formGroup]="credentialForm">
+    <ion-item>
+      <ion-input type="email" placeholder="E-mail" formControlName="email"></ion-input>
+      <ion-note slot="error" *ngIf="(epost?.dirty || epost?.touched) && epost?.errors">E-mail er ikke godkendt</ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-input type="password" placeholder="Kodeord" formControlName="password"></ion-input>
+      <ion-note slot="error" *ngIf="(password?.dirty || password?.touched) && password?.errors">Password er ikke godkendt</ion-note>
+    </ion-item>
+    
+    <ion-button (click)="register()" expand="full">Sign up</ion-button>
+    <ion-button (click)="login()" expand="full" color="secondary" [disabled]="!credentialForm.valid">Sign In</ion-button>
+  </form>
+    
+</ion-content>
